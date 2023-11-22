@@ -6,6 +6,7 @@ public class AnimalMovement : MonoBehaviour
 {
     [SerializeField]
     private float walkingSpeed;
+    [SerializeField]
     private Rigidbody2D rb;
     public List<Transform> walkingPositions;
     [SerializeField]
@@ -15,7 +16,7 @@ public class AnimalMovement : MonoBehaviour
 
     private void Awake()
     {
-        rb = GetComponentInChildren<Rigidbody2D>();
+        rb = transform.GetChild(0).GetComponent<Rigidbody2D>();
         ChooseNextPosition();
     }
 
@@ -53,38 +54,9 @@ public class AnimalMovement : MonoBehaviour
 
     }
 
-    private void Run()
-    {
-
-    }
-
     public void SetAnimalSpeed(float speed)
     {
         walkingSpeed = speed;
     }
 
-    public void RunFromPlayer(float speed, float time, Vector3 playerPosition)
-    {
-        StartCoroutine(Run(speed, time,playerPosition));
-    }
-
-    private IEnumerator Run(float speed, float time, Vector3 playerPosition)
-    {
-        walking = false;
-
-        float startTime = Time.time;
-
-        float endTime = startTime + time;
-
-        while (Time.time < endTime)
-        {
-            Vector3 direction = transform.position - playerPosition;
-            direction.Normalize();
-            rb.AddForce( direction * speed *10 );
-
-            yield return null;
-        }
-
-        walking = true;
-    }
 }

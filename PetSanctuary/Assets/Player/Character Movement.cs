@@ -6,8 +6,6 @@ public class CharacterMovement : MonoBehaviour
     private float moveSpeed = 5f;
     private Joystick joystick;
 
-    private float verticalVelocity = 0f;
-
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
