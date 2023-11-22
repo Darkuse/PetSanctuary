@@ -9,8 +9,6 @@ public class AnimalMovement : MonoBehaviour
     [SerializeField]
     private Vector2 nextPosition;
     private float walkingRadius;
-    [SerializeField]
-    GameObject objecst;
 
     private void Awake()
     {
