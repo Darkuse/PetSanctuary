@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimalMovement : MonoBehaviour
@@ -8,35 +6,36 @@ public class AnimalMovement : MonoBehaviour
     private float walkingSpeed;
     [SerializeField]
     private Rigidbody2D rb;
-    public List<Transform> walkingPositions;
     [SerializeField]
-    private bool walking = false;
+    private Vector2 nextPosition;
+    private float walkingRadius;
     [SerializeField]
-    private int nextPosition;
+    GameObject objecst;
 
     private void Awake()
     {
         rb = transform.GetChild(0).GetComponent<Rigidbody2D>();
+        walkingRadius = GetComponent<AnimalInfo>().detectionRadius;
         ChooseNextPosition();
     }
 
     private void Update()
     {
-        if (walking)
-        {
-            MoveToNextPosition();
-        }
+        MoveToNextPosition();
     }
 
     private void ChooseNextPosition()
     {
-        nextPosition = Random.Range(0, walkingPositions.Count);
-        walking = true;
+        float random1 = Random.Range(-walkingRadius, walkingRadius);
+        float random2 = Random.Range(-walkingRadius, walkingRadius);
+        nextPosition = new Vector2(random1, random2);
     }
 
     private void MoveToNextPosition()
     {
-        Vector3 targetPosition = walkingPositions[nextPosition].position;
+
+        Vector3 targetPosition = nextPosition;
+        targetPosition += transform.position;
         Vector3 currentPosition = transform.GetChild(0).position;
 
         float distance = Vector3.Distance(targetPosition, currentPosition);
