@@ -27,11 +27,11 @@ public class AnimalMovement : MonoBehaviour
         float random1 = Random.Range(-walkingRadius, walkingRadius);
         float random2 = Random.Range(-walkingRadius, walkingRadius);
         nextPosition = new Vector2(random1, random2);
+        walkingSpeed = GetComponent<AnimalInfo>().walkingSpeed;
     }
 
     private void MoveToNextPosition()
     {
-
         Vector3 targetPosition = nextPosition;
         targetPosition += transform.position;
         Vector3 currentPosition = transform.GetChild(0).position;

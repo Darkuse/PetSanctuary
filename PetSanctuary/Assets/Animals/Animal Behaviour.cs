@@ -33,7 +33,7 @@ public class AnimalBehaviour : MonoBehaviour
 #endif
     private IEnumerator Run(float speed, float time, Vector3 playerPosition)
     {
-
+        _movement.SetAnimalSpeed(_info.runningSpeed);
         float startTime = Time.time;
 
         float endTime = startTime + time;
