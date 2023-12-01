@@ -1,0 +1,5 @@
+E:/Projects/PetSanctuary/PetSanctuary/.utmp/RelWithDebInfo/5i2f5p37/armeabi-v7a/CMakeFiles/edit_cache.dir
+E:/Projects/PetSanctuary/PetSanctuary/.utmp/RelWithDebInfo/5i2f5p37/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+E:/Projects/PetSanctuary/PetSanctuary/.utmp/RelWithDebInfo/5i2f5p37/armeabi-v7a/FramePacing/CMakeFiles/swappywrapper.dir
+E:/Projects/PetSanctuary/PetSanctuary/.utmp/RelWithDebInfo/5i2f5p37/armeabi-v7a/FramePacing/CMakeFiles/edit_cache.dir
+E:/Projects/PetSanctuary/PetSanctuary/.utmp/RelWithDebInfo/5i2f5p37/armeabi-v7a/FramePacing/CMakeFiles/rebuild_cache.dir
