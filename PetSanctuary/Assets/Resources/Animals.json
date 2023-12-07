@@ -1,0 +1,54 @@
+{
+    "animals": [
+      {
+        "name": "Rabbit",
+        "rarity": "Common",
+        "difficultyWeight": 0.3,
+        "detectionRadius": 15.0,
+        "walkingRadius": 5.0,
+        "walkingSpeed": 1.5,
+        "runningSpeed": 4.0,
+        "runningTime": 2.0
+      },
+      {
+        "name": "Roe Deer",
+        "rarity": "Uncommon",
+        "difficultyWeight": 0.5,
+        "detectionRadius": 20.0,
+        "walkingRadius": 10.0,
+        "walkingSpeed": 2.0,
+        "runningSpeed": 5.0,
+        "runningTime": 3.0
+      },
+      {
+        "name": "Lynx",
+        "rarity": "Rare",
+        "difficultyWeight": 0.7,
+        "detectionRadius": 25.0,
+        "walkingRadius": 12.0,
+        "walkingSpeed": 2.5,
+        "runningSpeed": 6.0,
+        "runningTime": 3.5
+      },
+      {
+        "name": "Owl",
+        "rarity": "Epic",
+        "difficultyWeight": 0.8,
+        "detectionRadius": 30.0,
+        "walkingRadius": 15.0,
+        "walkingSpeed": 3.0,
+        "runningSpeed": 7.0,
+        "runningTime": 4.0
+      },
+      {
+        "name": "Fox",
+        "rarity": "Legendary",
+        "difficultyWeight": 1.0,
+        "detectionRadius": 35.0,
+        "walkingRadius": 20.0,
+        "walkingSpeed": 3.5,
+        "runningSpeed": 8.0,
+        "runningTime": 5.0
+      }
+  ]
+}

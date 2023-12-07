@@ -1,0 +1,25 @@
+{
+    "missionDescirption": [
+        {
+            "missionName": "{0} Frenzy",
+            "missionType": "Trap",
+            "description": "Locate and rescue a cunning {0} caught in a trap in the dense forest."
+          },
+          {
+            "missionName": "{0} Watch",
+            "missionType": "Injured",
+            "description": "Track and rescue an injured {0}."
+          },
+          {
+            "missionName": "{0} Lookout",
+            "missionType": "Lost",
+            "description": "Navigate through the forest to find and rescue a lost {0}."
+          },
+          {
+            "missionName": "{0} Rescue",
+            "missionType": "Lost",
+            "description": "Help a frightened {0} find its way back to safety."
+          }
+    ]
+}
+  

@@ -3,7 +3,7 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private float moveSpeed = 5f;
+    private float moveSpeed = 3f;
     private Joystick joystick;
 
     private void Start()

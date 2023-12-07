@@ -31,6 +31,7 @@ public class ResourceInfo : MonoBehaviour, IInteractable
     {
         if (collision.CompareTag("Player"))
         {
+            interactionText = GameObject.Find("ButtonAction").transform.GetChild(0).GetComponent<TextMeshProUGUI>();
             player = collision.GetComponent<PlayerController>();
             player.SetIInstance(this);
             interactionText.text = resourceName;

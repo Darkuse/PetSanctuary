@@ -1,41 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class SidePanel : MonoBehaviour
 {
-
-
+    public List<TextMeshProUGUI> resourceDisplay = new List<TextMeshProUGUI>();
     public void ToStartMenu()
     {
         SceneManager.LoadScene("Start Menu");
     }
 
-    [SerializeField]
-    private RectTransform inventoryPanel;
-    public void InventoryInteraction()
+    private void Start()
     {
-        StartCoroutine(MoveInventoryPanel());
+        PlayerInventory.Instance.resourceDisplay = resourceDisplay;
+        PlayerInventory.Instance.LoadResourcesToText();
     }
 
-    private bool isAtTop = false;
+    public void PanelInteraction(RectTransform panel, ref bool isOnTop, float inScenePosition, float overScenePosition)
+    {
+        StartCoroutine(MovePanel(inScenePosition, overScenePosition, panel, isOnTop));
+        isOnTop = !isOnTop;
+    }
+
     private float duration = 0.5f;
-    IEnumerator MoveInventoryPanel()
+    private IEnumerator MovePanel(float inScenePosition, float overScenePosition, RectTransform panel, bool isOnTop)
     {
         float time = 0;
-        Vector2 startPosition = inventoryPanel.anchoredPosition;
-        Vector2 endPosition = isAtTop ? new Vector2(startPosition.x, 0) : new Vector2(startPosition.x, 50);
+        Vector2 startPosition = panel.anchoredPosition;
+        Vector2 endPosition = !isOnTop ? new Vector2(startPosition.x, inScenePosition) : new Vector2(startPosition.x, overScenePosition);
 
         while (time < duration)
         {
             time += Time.deltaTime;
-            inventoryPanel.anchoredPosition = Vector2.Lerp(startPosition, endPosition, time / duration);
+            panel.anchoredPosition = Vector2.Lerp(startPosition, endPosition, time / duration);
             yield return null;
         }
+    }
 
-        inventoryPanel.anchoredPosition = endPosition;
-        isAtTop = !isAtTop;
+    [SerializeField]
+    private RectTransform inventoryPanel;
+    private bool inOnTop = false;
+    public void InventoryInteraction()
+    {
+        PanelInteraction(inventoryPanel, ref inOnTop, 0, 50);
+    }
+
+    [SerializeField]
+    private RectTransform missionPanel;
+    private bool miOnTop = false;
+    public void MissionInteraction()
+    {
+        PanelInteraction(missionPanel, ref miOnTop, -50, 450);
+    }
+
+    public void GetBackFromMission()
+    {
+        SceneManager.LoadScene("Base");
     }
 }

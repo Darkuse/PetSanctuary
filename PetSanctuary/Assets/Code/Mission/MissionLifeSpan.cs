@@ -1,0 +1,94 @@
+using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MissionLifeSpan : MonoBehaviour
+{
+    private string missionName;
+    private string missionType;
+    private float missionDifficulty;
+    private string missionDescription;
+    private int missionCompleteTime;
+    private float missionLifeSpan;
+    private int missionReward;
+    private GameObject missionAnimal;
+
+    public void SetMissionInfo(string name, string type, float difficulty, string description, GameObject animal)
+    {
+        missionName = name;
+        missionType = type;
+        missionDifficulty = difficulty;
+        missionDescription = description;
+        missionAnimal = animal;
+    }
+
+    private void Start()
+    {
+        GetComponent<Button>().onClick.AddListener(PickedMission);
+
+        // Mission Name
+        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format(missionName, missionAnimal.GetComponent<AnimalInfo>().name);
+        // Mission LifeSpan
+        missionLifeSpan = (int)(Random.Range(1, 6) / missionDifficulty);
+        transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format("Time Left: {0}m", missionLifeSpan);
+        // Mission Difficulty
+
+        string difficultyCategory;
+
+        if (missionDifficulty <= 0.3)
+        {
+            difficultyCategory = "Easy";
+        }
+        else if (missionDifficulty <= 0.6)
+        {
+            difficultyCategory = "Medium";
+        }
+        else
+        {
+            difficultyCategory = "Hard";
+        }
+
+        transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Format("Difficulty: {0}", difficultyCategory);
+
+        StartCoroutine(TimerCoroutine());
+    }
+
+    private IEnumerator TimerCoroutine()
+    {
+        while (missionLifeSpan > 0)
+        {
+            yield return new WaitForSeconds(60);
+            missionLifeSpan--;
+            transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format("Time Left: {0}m", missionLifeSpan);
+        }
+        Debug.Log("Timer finished!");
+        Destroy(gameObject);
+    }
+
+
+    [SerializeField]
+    DataCarrier data;
+    public void PickedMission()
+    {
+        GameObject missionDescriptionPanel = GameObject.Find("MainCanvas").transform.Find("PanelMissionDescription").gameObject;
+        missionDescriptionPanel.SetActive(true);
+        MissionPanel misisonPanel = missionDescriptionPanel.GetComponent<MissionPanel>();
+        // Mission Name
+        misisonPanel.missionNameText.text = string.Format(missionName, missionAnimal.GetComponent<AnimalInfo>().name);
+        // Mission Description
+        misisonPanel.missionDescriptionText.text = string.Format(missionDescription, missionAnimal.GetComponent<AnimalInfo>().name);
+        // Complete Time
+        missionCompleteTime = (int)(5 / missionDifficulty);
+        misisonPanel.completionTimeText.text = string.Format("Mission completion time: {0} minutes", missionCompleteTime);
+        // Reward
+        missionReward = (int)(500 * missionDifficulty);
+        misisonPanel.rewardText.text = string.Format("Reward: {0} coins", missionReward);
+        data = GameObject.Find("DontDestroyOnLoad").GetComponent<DataCarrier>();
+        data.SetMissionData(string.Format(
+            missionName, missionAnimal.GetComponent<AnimalInfo>().name),
+            string.Format(missionDescription, missionAnimal.GetComponent<AnimalInfo>().name),
+            missionCompleteTime,
+            missionAnimal);
+    }
+}

@@ -10,11 +10,10 @@ public class PlayerInventory : MonoBehaviour
 
     private Dictionary<string, int> resources = new Dictionary<string, int>();
     [SerializeField]
-    private List<TextMeshProUGUI> resourceDisplay = new List<TextMeshProUGUI>();
+    public List<TextMeshProUGUI> resourceDisplay = new List<TextMeshProUGUI>();
 
     void Awake()
     {
-        // Singleton setup
         if (Instance == null)
         {
             Instance = this;
@@ -37,12 +36,25 @@ public class PlayerInventory : MonoBehaviour
         {
             resources[resourceName] = resourceCount;
         }
+        UpdateResourceText(resourceName);
+    }
+
+    private void UpdateResourceText(string resourceName)
+    {
         foreach (TextMeshProUGUI txt in resourceDisplay)
         {
-            if (txt.gameObject.name == "TextCount"+resourceName)
+            if (txt.gameObject.name == "TextCount" + resourceName)
             {
                 txt.text = resources[resourceName].ToString("D5");
             }
+        }
+    }
+
+    public void LoadResourcesToText()
+    {
+        foreach (var resource in resources)
+        {
+            UpdateResourceText(resource.Key);
         }
     }
 }
