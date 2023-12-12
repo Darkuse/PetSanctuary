@@ -25,6 +25,7 @@ public class ResourceInfo : MonoBehaviour, IInteractable
     {
         Debug.Log(string.Format("{0} have {1} resources",resourceName,resourceCount));
         PlayerInventory.Instance.AddResource(resourceDataName, resourceCount);
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

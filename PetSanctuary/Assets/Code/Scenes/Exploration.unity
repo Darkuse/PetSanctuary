@@ -8552,8 +8552,9 @@ MonoBehaviour:
   trees:
   - {fileID: 3793052261632846383, guid: fad493fa91588994d8946ad5b9a66dbd, type: 3}
   stones:
-  - {fileID: 7298714579162085671, guid: 57c619101ba53664bb214e9a4db5c1cf, type: 3}
-  data: {fileID: 1963851624}
+  - {fileID: 2460057415481518608, guid: 57c619101ba53664bb214e9a4db5c1cf, type: 3}
+  - {fileID: 867980754011721765, guid: 6edbe4d1ac35f1646bb100d3cae4d8af, type: 3}
+  - {fileID: 3124553285710045185, guid: 6f216221c4b46164ba48bc5086d2b3c4, type: 3}
   treeSpawn: {fileID: 922875451}
   stoneSpawn: {fileID: 561602303}
 --- !u!114 &1650272309
@@ -8572,6 +8573,7 @@ MonoBehaviour:
   missionDescription: {fileID: 1053917404476356202}
   data: {fileID: 1963851624}
   timer: {fileID: 1458733572}
+  timeRemaining: 0
 --- !u!1001 &1778101976
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -24,7 +24,7 @@ public class PopulateWorld : MonoBehaviour
 
     void AddResources()
     {
-        //Random.InitState(seed);
+        Random.InitState(seed);
 
         // Populate Trees
         int treeCount = Random.Range(10, 20);
