@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -42,14 +43,42 @@ public class GridBuilding : MonoBehaviour
     private int startY = -3;
     private int endY = 3;
 
-    // Extra size so player can walk around cages
-    private int extraSize = 1;
+
+    [Header("Buildings")]
+    public Transform buildingSpace;
+    private List<SerializableBuildInfo> buildingCenterPosition = new List<SerializableBuildInfo>();
 
 
 
     private void Start()
     {
-        LoadTilemap();
+        buildingCenterPosition = LoadBuildingList();
+        foreach (var item in buildingCenterPosition)
+        {
+            width = item.buildingWidth;
+            height = item.buildingHeight;
+            ChangeStartEndIterationSize(0);
+            HighLight(item.GetVector3Int(), redTile);
+            BuildFence(item.GetVector3Int());
+            SpawnObjectAtCenter(item.GetVector3Int(), width, height);
+        }
+    }
+
+    private void ChangeStartEndIterationSize(int extraSize)
+    {
+        startX = -(width / 2) - extraSize;
+        endX = (width / 2) + extraSize;
+        startY = -(height / 2) - extraSize;
+        endY = (height / 2) + extraSize;
+
+        if (width % 2 == 0)
+        {
+            endX -= 1;
+        }
+        if (height % 2 == 0)
+        {
+            endY -= 1;
+        }
     }
 
     public void StartBuilding()
@@ -63,21 +92,10 @@ public class GridBuilding : MonoBehaviour
         buildCanvas.SetActive(!buildCanvas.activeSelf);
         building = !building;
         camera.transform.position = new Vector3(0, 0, -20);
+
         if (building)
         {
-            startX = -(width / 2) - extraSize;
-            endX = (width / 2) + extraSize;
-            startY = -(height / 2) - extraSize;
-            endY = (height / 2) + extraSize;
-
-            if (width % 2 == 0)
-            {
-                endX -= 1;
-            }
-            if (height % 2 == 0)
-            {
-                endY -= 1;
-            }
+            ChangeStartEndIterationSize(1);
         }
         else
         {
@@ -141,95 +159,104 @@ public class GridBuilding : MonoBehaviour
     {
         StartBuilding();
 
-        startX += extraSize;
-        endX -= extraSize;
-        startY += extraSize;
-        endY -= extraSize;
+        ChangeStartEndIterationSize(0);
 
+        BuildFence(previuosCenter);
 
+        buildingCenterPosition.Add(new SerializableBuildInfo(previuosCenter, width, height));
+
+        SaveBuildingList();
+
+        HighLight(previuosCenter, redTile);
+
+        SpawnObjectAtCenter(previuosCenter, width, height);
+
+    }
+
+    private void BuildFence(Vector3Int position)
+    {
         for (int x = startX; x <= endX; x++)
         {
             for (int y = startY; y <= endY; y++)
             {
-                Vector3Int tilePosition = new Vector3Int(previuosCenter.x + x, previuosCenter.y + y, previuosCenter.z);
+                Vector3Int tilePosition = new Vector3Int(position.x + x, position.y + y, position.z);
                 cageGrid.SetTile(tilePosition, fenceTile);
-
             }
         }
-
-        HighLight(previuosCenter, redTile);
-        SaveTilemap();
     }
 
-    public void SaveTilemap()
+    public void SpawnObjectAtCenter(Vector3 centerPosition, int width, int height)
     {
-        List<TileData> tileDataList = new List<TileData>();
-        BoundsInt bounds = builderGrid.cellBounds;
+        // Creates new gameObject
+        GameObject spawnedObject = new GameObject("CageInfo");
+        // Sets to parent
+        spawnedObject.transform.SetParent(buildingSpace, false);
+        // If cage width are not even, center is adjusted
+        if (width % 2 != 0) centerPosition += new Vector3(0.5f, 0, 0);
+        // If cage height are not even, center is adjusted
+        if (height % 2 != 0) centerPosition += new Vector3(0, 0.5f, 0);
+        spawnedObject.transform.position = centerPosition;
 
+        // Ads to object Collider and sets width and height
+        BoxCollider boxCollider = spawnedObject.AddComponent<BoxCollider>();
+        boxCollider.size = new Vector3(width, height, 1); 
+    }
+
+    private void SaveBuildingList()
+    {
+        SerializableVector3IntList serializableList = new SerializableVector3IntList();
+
+        foreach (var build in buildingCenterPosition)
+        {
+            serializableList.list.Add(build);
+        }
+
+        string json = JsonUtility.ToJson(serializableList);
+        PlayerPrefs.SetString("BuildList",json);
+        //File.WriteAllText(Application.dataPath + "/BuildingList.txt", json);
+    }
+
+    public List<SerializableBuildInfo> LoadBuildingList()
+    {
+        //string path = Application.dataPath + "/BuildingList.txt";
+
+        string json = PlayerPrefs.GetString("BuildList");
+        if (json!=null)
+        {
+            SerializableVector3IntList serializableList = JsonUtility.FromJson<SerializableVector3IntList>(json);
+
+            List<SerializableBuildInfo> buildingInfo = new List<SerializableBuildInfo>();
+            foreach (var serializableVector in serializableList.list)
+            {
+                Vector3Int vector = new Vector3Int(serializableVector.x, serializableVector.y, serializableVector.z);
+                SerializableBuildInfo buildInfo = new SerializableBuildInfo(vector, serializableVector.buildingWidth, serializableVector.buildingHeight);
+                buildingInfo.Add(buildInfo);
+            }
+
+            return buildingInfo;
+        }
+        return new List<SerializableBuildInfo>();
+    }
+
+    public void NewTileMap()
+    {
+        BoundsInt bounds = builderGrid.cellBounds;
         for (int x = bounds.xMin; x < bounds.xMax; x++)
         {
             for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
                 TileBase tile = builderGrid.GetTile(new Vector3Int(x, y, 0));
-                if (tile != null && tile == redTile)
+                if (tile == redTile)
                 {
-                    tileDataList.Add(new TileData(x, y, tile.name));
+                    builderGrid.SetTile(new Vector3Int(x, y), greenTile);
                 }
             }
         }
-
-        string json = JsonUtility.ToJson(new Serialization<TileData>(tileDataList));
-        PlayerPrefs.SetString("SavedTilemap", json);
-        PlayerPrefs.Save();
-
-        File.WriteAllText(Application.dataPath + "/TileMapBuild.json", json);
-
-    }
-
-    public void NewTileMap()
-    {
-        builderGrid = restartBuilderGrid;
-    }
-
-
-    public void LoadTilemap()
-    {
-        if (PlayerPrefs.HasKey("SavedTilemap"))
-        {
-            string json = PlayerPrefs.GetString("SavedTilemap");
-            Serialization<TileData> data = JsonUtility.FromJson<Serialization<TileData>>(json);
-            List<TileData> tileDataList = data.ToList();
-
-            foreach (TileData tileData in tileDataList)
-            {
-                Vector3Int tilePosition = new Vector3Int(tileData.x, tileData.y, 0);
-                TileBase tileToSet = null;
-
-                switch (tileData.tileType)
-                {
-                    case "GreenTiles_0":
-                        tileToSet = greenTile;
-                        break;
-                    case "YellowTiles_0":
-                        tileToSet = yellowTile;
-                        break;
-                    case "RedTiles_0":
-                        tileToSet = redTile;
-                        break;
-                }
-
-                if (tileToSet == redTile)
-                {
-                    cageGrid.SetTile(tilePosition, fenceTile);
-                }
-
-                builderGrid.SetTile(tilePosition, tileToSet);
-            }
-        }
+        File.WriteAllText(Application.dataPath + "/BuildingList.txt", null);
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class TileData
 {
     public int x, y;
@@ -243,7 +270,7 @@ public class TileData
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class Serialization<T>
 {
     [SerializeField] private List<T> items;
@@ -258,3 +285,32 @@ public class Serialization<T>
         return items;
     }
 }
+
+[Serializable]
+public class SerializableBuildInfo
+{
+    public int x, y, z, buildingWidth, buildingHeight;
+    AnimalInfo animal;
+
+
+    public SerializableBuildInfo(Vector3Int vector, int width, int height)
+    {
+        x = vector.x;
+        y = vector.y;
+        z = vector.z;
+        buildingWidth = width;
+        buildingHeight = height;
+    }
+
+    public Vector3Int GetVector3Int()
+    {
+        return new Vector3Int(x, y, z);
+    }
+}
+
+[Serializable]
+public class SerializableVector3IntList
+{
+    public List<SerializableBuildInfo> list = new List<SerializableBuildInfo>();
+}
+
