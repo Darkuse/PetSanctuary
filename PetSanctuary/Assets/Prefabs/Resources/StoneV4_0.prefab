@@ -106,11 +106,7 @@ MonoBehaviour:
   resourceDataName: Stone
   description: 
   resourceCount: 5
-  gatheringTools:
-  - Hand
-  - Pickaxe
-  - Axe
-  - Fishing Pole
+  gatheringTools: 1
   interactionText: {fileID: 0}
 --- !u!61 &1752101877176569039
 BoxCollider2D:

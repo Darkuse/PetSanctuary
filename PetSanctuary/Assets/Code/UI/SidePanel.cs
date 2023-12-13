@@ -59,4 +59,9 @@ public class SidePanel : MonoBehaviour
     {
         SceneManager.LoadScene("Base");
     }
+
+    public void AddResource(string resourceName)
+    {
+        PlayerInventory.Instance.AddResource(resourceName, 10);
+    }
 }

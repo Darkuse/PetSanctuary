@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 1069ea479b193f444a2f3106355dc6ab
+guid: 0bb1c92d8b98ea14c9bfd356f427042b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7191082202076981621
-    second: BorderV1_0
+      213: -5825250732961213246
+    second: Axe_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -139,22 +139,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BorderV1_0
+      name: Axe_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 511
-        height: 144
+        width: 226
+        height: 244
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 16, y: 12, z: 14, w: 12}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 579ae6da92bdbc360800000000000000
-      internalID: 7191082202076981621
+      spriteID: 2c45346625d882fa0800000000000000
+      internalID: -5825250732961213246
       vertices: []
       indices: 
       edges: []
@@ -162,7 +162,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: bebbfefd13a18b7439e83e42c88a2601
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -170,7 +170,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      BorderV1_0: 7191082202076981621
+      Axe_0: -5825250732961213246
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

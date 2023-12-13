@@ -14,6 +14,7 @@ public class AnimalInfo : MonoBehaviour
     }
 
     public string name;
+    public string dataName;
     public RarityTier rarity;
     public float difficultyWeight;
     public float detectionRadius;
@@ -21,4 +22,7 @@ public class AnimalInfo : MonoBehaviour
     public float walkingSpeed;
     public float runningSpeed;
     public float runningTime;
+    public int friendship=0;
+    public int health=10;
+    public int hunger=20;
 }

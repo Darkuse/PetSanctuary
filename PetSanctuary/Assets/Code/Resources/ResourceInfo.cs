@@ -5,12 +5,20 @@ using UnityEngine;
 
 public class ResourceInfo : MonoBehaviour, IInteractable
 {
+    public enum GatheringTool
+    {
+        Hand,
+        Pickaxe,
+        Axe,
+        Fishing_Pole
+    }
+
     public string resourceName;
     [SerializeField]
     private string resourceDataName;
     public string description;
     public int resourceCount;
-    public List<string> gatheringTools = new List<string> { "Hand", "Pickaxe", "Axe", "Fishing Pole" };
+    public GatheringTool gatheringTools;
 
     private PlayerController player;
     public TextMeshProUGUI interactionText;
@@ -32,10 +40,9 @@ public class ResourceInfo : MonoBehaviour, IInteractable
     {
         if (collision.CompareTag("Player"))
         {
-            interactionText = GameObject.Find("ButtonAction").transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+            GameObject.Find("ButtonAction").GetComponent<InteractionButton>().ChangeImage(gatheringTools.ToString());
             player = collision.GetComponent<PlayerController>();
             player.SetIInstance(this);
-            interactionText.text = resourceName;
         }
     }
 
@@ -44,7 +51,7 @@ public class ResourceInfo : MonoBehaviour, IInteractable
         if (collision.CompareTag("Player"))
         {
             player.clearIInstance();
-            interactionText.text = "";
+            GameObject.Find("ButtonAction").GetComponent<InteractionButton>().ChangeImage(null);
         }
     }
 }

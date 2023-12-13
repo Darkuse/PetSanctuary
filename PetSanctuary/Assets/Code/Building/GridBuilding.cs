@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -48,8 +47,6 @@ public class GridBuilding : MonoBehaviour
     public Transform buildingSpace;
     private List<SerializableBuildInfo> buildingCenterPosition = new List<SerializableBuildInfo>();
 
-
-
     private void Start()
     {
         buildingCenterPosition = LoadBuildingList();
@@ -78,6 +75,32 @@ public class GridBuilding : MonoBehaviour
         if (height % 2 == 0)
         {
             endY -= 1;
+        }
+    }
+
+    [Header("Warning")]
+    public GameObject warningPanel;
+    private ResourceCost resourceCost;
+    public void ToBuildMenu(ResourceCost cost)
+    {
+        try
+        {
+            bool canAfford = true;
+            canAfford &= PlayerInventory.Instance.IfEnoughResources("Wood", cost.woodCost);
+            canAfford &= PlayerInventory.Instance.IfEnoughResources("Stone", cost.stoneCost);
+            canAfford &= PlayerInventory.Instance.IfEnoughResources("Gold", cost.goldCost);
+            width = cost.cageWidth;
+            height = cost.cageHeight;
+
+            if (canAfford)
+                StartBuilding();
+            else
+                warningPanel.SetActive(true);
+            resourceCost = cost;
+        }
+        catch
+        {
+            warningPanel.SetActive(true);
         }
     }
 
@@ -157,20 +180,33 @@ public class GridBuilding : MonoBehaviour
 
     public void Build()
     {
+        // Disables enables ui elements
         StartBuilding();
 
+        // Fore iteration
         ChangeStartEndIterationSize(0);
 
+        // Builds Fence Tiles
         BuildFence(previuosCenter);
 
+        // Adds Fence position and infomration in list
         buildingCenterPosition.Add(new SerializableBuildInfo(previuosCenter, width, height));
 
+        // Save Build Fence in Playerprefs
         SaveBuildingList();
 
+        // Paints tile to red
         HighLight(previuosCenter, redTile);
 
+        // Spawns Fence object with information about him
         SpawnObjectAtCenter(previuosCenter, width, height);
 
+        // Removes resources
+        PlayerInventory.Instance.RemoveResource("Wood", resourceCost.woodCost);
+        PlayerInventory.Instance.RemoveResource("Stone", resourceCost.stoneCost);
+        PlayerInventory.Instance.RemoveResource("Gold", resourceCost.goldCost);
+
+        player.transform.position = new Vector2(0, 0);
     }
 
     private void BuildFence(Vector3Int position)
@@ -185,6 +221,7 @@ public class GridBuilding : MonoBehaviour
         }
     }
 
+    public GameObject cagePanel;
     public void SpawnObjectAtCenter(Vector3 centerPosition, int width, int height)
     {
         // Creates new gameObject
@@ -197,9 +234,10 @@ public class GridBuilding : MonoBehaviour
         if (height % 2 != 0) centerPosition += new Vector3(0, 0.5f, 0);
         spawnedObject.transform.position = centerPosition;
 
-        // Ads to object Collider and sets width and height
-        BoxCollider boxCollider = spawnedObject.AddComponent<BoxCollider>();
-        boxCollider.size = new Vector3(width, height, 1); 
+        // Adds to object Collider and sets width and height
+        BoxCollider2D boxCollider = spawnedObject.AddComponent<BoxCollider2D>();
+        boxCollider.size = new Vector3(width, height, 1);
+        spawnedObject.AddComponent<CageInfo>().SetCagePanel(cagePanel);
     }
 
     private void SaveBuildingList()
@@ -212,16 +250,13 @@ public class GridBuilding : MonoBehaviour
         }
 
         string json = JsonUtility.ToJson(serializableList);
-        PlayerPrefs.SetString("BuildList",json);
-        //File.WriteAllText(Application.dataPath + "/BuildingList.txt", json);
+        PlayerPrefs.SetString("BuildList", json);
     }
 
     public List<SerializableBuildInfo> LoadBuildingList()
     {
-        //string path = Application.dataPath + "/BuildingList.txt";
-
         string json = PlayerPrefs.GetString("BuildList");
-        if (json!=null)
+        if (json != null)
         {
             SerializableVector3IntList serializableList = JsonUtility.FromJson<SerializableVector3IntList>(json);
 
@@ -235,6 +270,7 @@ public class GridBuilding : MonoBehaviour
 
             return buildingInfo;
         }
+        // If json is empty, it will give blank list
         return new List<SerializableBuildInfo>();
     }
 
@@ -252,7 +288,7 @@ public class GridBuilding : MonoBehaviour
                 }
             }
         }
-        File.WriteAllText(Application.dataPath + "/BuildingList.txt", null);
+        PlayerPrefs.SetString("BuildList", null);
     }
 }
 
@@ -290,7 +326,11 @@ public class Serialization<T>
 public class SerializableBuildInfo
 {
     public int x, y, z, buildingWidth, buildingHeight;
-    AnimalInfo animal;
+    public int friendship;
+    public int health;
+    public int hunger;
+    public string dataName;
+    public string name;
 
 
     public SerializableBuildInfo(Vector3Int vector, int width, int height)

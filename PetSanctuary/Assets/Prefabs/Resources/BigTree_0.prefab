@@ -221,11 +221,7 @@ MonoBehaviour:
   resourceDataName: Wood
   description: 
   resourceCount: 10
-  gatheringTools:
-  - Hand
-  - Pickaxe
-  - Axe
-  - Fishing Pole
+  gatheringTools: 2
   interactionText: {fileID: 0}
 --- !u!212 &2221150606655365162
 SpriteRenderer:
