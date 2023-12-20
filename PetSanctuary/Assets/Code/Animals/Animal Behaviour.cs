@@ -9,7 +9,7 @@ public class AnimalBehaviour : MonoBehaviour
 
     private void Start()
     {
-        _info = GetComponent<AnimalInfo>();
+        _info = GetComponent<Animal>().animalInfo;
         _movement = transform.GetChild(0).GetComponent<AnimalMovement>();
         _movement.SetAnimalSpeed(_info.walkingSpeed);
         rb = GetComponent<Rigidbody2D>();

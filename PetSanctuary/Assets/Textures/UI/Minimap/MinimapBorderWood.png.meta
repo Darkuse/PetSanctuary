@@ -142,13 +142,13 @@ TextureImporter:
       name: MinimapBorderWood_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 3
-        width: 357
-        height: 357
+        x: 5
+        y: 5
+        width: 353
+        height: 352
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 17, y: 18, z: 18, w: 16}
       outline: []
       physicsShape: []
       tessellationDetail: -1
@@ -162,14 +162,15 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 6a55390085612b84d9b1489b190b2dc4
     internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      MinimapBorderWood_0: -5337346308533885888
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

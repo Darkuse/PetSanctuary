@@ -41,6 +41,6 @@ public class MissionGeneration : MonoBehaviour
 
         MissionInfo mission = missionsContainer.missionDescirption[Random.Range(0, missionsContainer.missionDescirption.Count)];
 
-        missionInstance.AddComponent<MissionLifeSpan>().SetMissionInfo(mission.missionName,mission.missionType, pickedAnimal.GetComponent<AnimalInfo>().difficultyWeight, mission.description,pickedAnimal);
+        missionInstance.AddComponent<MissionLifeSpan>().SetMissionInfo(mission.missionName,mission.missionType, pickedAnimal.GetComponent<Animal>().animalInfo.difficultyWeight, mission.description,pickedAnimal);
     }
 }

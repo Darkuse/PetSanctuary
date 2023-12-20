@@ -13,6 +13,6 @@ public class MovingDepthSorting : MonoBehaviour
 
     void Update()
     {
-        spriteRenderer.sortingOrder = (int)(-transform.position.y * 100);
+        spriteRenderer.sortingOrder = (int)(-transform.position.y * 10);
     }
 }

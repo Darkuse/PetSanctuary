@@ -14,12 +14,12 @@ public class AnimalMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        walkingRadius = GetComponentInParent<AnimalInfo>().walkingRadius;
-        GetComponent<CircleCollider2D>().radius = GetComponentInParent<AnimalInfo>().detectionRadius;
+        walkingRadius = GetComponentInParent<Animal>().animalInfo.walkingRadius;
+        GetComponent<CircleCollider2D>().radius = GetComponentInParent<Animal>().animalInfo.detectionRadius;
         ChooseNextPosition();
     }
 
-    private void Update()
+    private void Update()   
     {
         MoveToNextPosition();
     }

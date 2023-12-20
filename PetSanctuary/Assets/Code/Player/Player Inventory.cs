@@ -1,8 +1,9 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+[Serializable]
 public class PlayerInventory : MonoBehaviour
 {
     // Singleton instance
@@ -12,18 +13,12 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField]
     public List<TextMeshProUGUI> resourceDisplay = new List<TextMeshProUGUI>();
 
-    private void Start()
-    {
-        resources.Add("Gold", 0);
-        resources.Add("Wood", 0);
-        resources.Add("Stone", 0);
-        LoadResources();
-    }
 
     void Awake()
     {
         if (Instance == null)
         {
+            LoadResources();
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -45,6 +40,7 @@ public class PlayerInventory : MonoBehaviour
             resources[resourceName] = resourceCount;
         }
         UpdateResourceText(resourceName);
+        SaveResources();
     }
 
     public void RemoveResource(string resourceName, int resourceCount)
@@ -64,6 +60,7 @@ public class PlayerInventory : MonoBehaviour
             Debug.LogWarning("Trying to remove a resource that doesn't exist in the inventory.");
         }
         UpdateResourceText(resourceName);
+        SaveResources();
     }
 
     private void UpdateResourceText(string resourceName)
@@ -79,6 +76,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void LoadResourcesToText()
     {
+
         foreach (var resource in resources)
         {
             UpdateResourceText(resource.Key);
@@ -87,7 +85,7 @@ public class PlayerInventory : MonoBehaviour
 
     public bool IfEnoughResources(string resourceName, int cost)
     {
-        if (resources[resourceName]>=cost)
+        if (resources[resourceName] >= cost)
         {
             return true;
         }
@@ -123,7 +121,7 @@ public class PlayerInventory : MonoBehaviour
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class ResourceData
 {
     public string key;
@@ -136,8 +134,8 @@ public class ResourceData
     }
 }
 
-// a construct to help serialize a dictionary into JSON
-[System.Serializable]
+
+[Serializable]
 public class ResourceList
 {
     public List<ResourceData> resources;

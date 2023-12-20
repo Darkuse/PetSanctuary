@@ -5,18 +5,20 @@ public class DataCarrier : MonoBehaviour
     public string missionName;
     public string missionDescription;
     public int missionCompleteTime;
-    public GameObject missionAnimal;
+    public string missionAnimalDataName;
+    public int missionReward;
 
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
     }
 
-    public void SetMissionData(string name, string description, int completeTime, GameObject animal)
+    public void SetMissionData(string name, string description, int completeTime, string animal,int reward)
     {
         missionName = name;
         missionDescription = description;
         missionCompleteTime = completeTime;
-        missionAnimal = animal;
+        missionAnimalDataName = animal;
+        missionReward = reward;
     }
 }

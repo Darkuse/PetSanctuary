@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ResourceInfo : MonoBehaviour, IInteractable
 {
@@ -23,9 +24,12 @@ public class ResourceInfo : MonoBehaviour, IInteractable
     private PlayerController player;
     public TextMeshProUGUI interactionText;
 
+    public GameObject smokeParticle;
+
 
     public void InteractLogic()
     {
+        Instantiate(smokeParticle, transform.position, Quaternion.identity);
         gatherResource();
     }
 

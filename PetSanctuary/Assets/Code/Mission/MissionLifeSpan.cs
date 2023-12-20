@@ -28,7 +28,7 @@ public class MissionLifeSpan : MonoBehaviour
         GetComponent<Button>().onClick.AddListener(PickedMission);
 
         // Mission Name
-        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format(missionName, missionAnimal.GetComponent<AnimalInfo>().name);
+        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format(missionName, missionAnimal.GetComponent<Animal>().animalInfo.name);
         // Mission LifeSpan
         missionLifeSpan = (int)(Random.Range(1, 6) / missionDifficulty);
         transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format("Time Left: {0}m", missionLifeSpan);
@@ -75,20 +75,21 @@ public class MissionLifeSpan : MonoBehaviour
         missionDescriptionPanel.SetActive(true);
         MissionPanel misisonPanel = missionDescriptionPanel.GetComponent<MissionPanel>();
         // Mission Name
-        misisonPanel.missionNameText.text = string.Format(missionName, missionAnimal.GetComponent<AnimalInfo>().name);
+        misisonPanel.missionNameText.text = string.Format(missionName, missionAnimal.GetComponent<Animal>().animalInfo.name);
         // Mission Description
-        misisonPanel.missionDescriptionText.text = string.Format(missionDescription, missionAnimal.GetComponent<AnimalInfo>().name);
+        misisonPanel.missionDescriptionText.text = string.Format(missionDescription, missionAnimal.GetComponent<Animal>().animalInfo.name);
         // Complete Time
         missionCompleteTime = (int)(5 / missionDifficulty);
         misisonPanel.completionTimeText.text = string.Format("Mission completion time: {0} minutes", missionCompleteTime);
         // Reward
-        missionReward = (int)(500 * missionDifficulty);
+        missionReward = (int)(missionAnimal.GetComponent<Animal>().animalInfo.difficultyWeight * 2 * 10) + 10;
         misisonPanel.rewardText.text = string.Format("Reward: {0} coins", missionReward);
         data = GameObject.Find("DontDestroyOnLoad").GetComponent<DataCarrier>();
         data.SetMissionData(string.Format(
-            missionName, missionAnimal.GetComponent<AnimalInfo>().name),
-            string.Format(missionDescription, missionAnimal.GetComponent<AnimalInfo>().name),
+            missionName, missionAnimal.GetComponent<Animal>().animalInfo.name),
+            string.Format(missionDescription, missionAnimal.GetComponent<Animal>().animalInfo.name),
             missionCompleteTime,
-            missionAnimal);
+            missionAnimal.GetComponent<Animal>().animalInfo.dataName,
+            (int)(missionAnimal.GetComponent<Animal>().animalInfo.difficultyWeight*2*10)+10);
     }
 }
