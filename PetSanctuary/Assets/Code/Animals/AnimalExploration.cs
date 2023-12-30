@@ -15,14 +15,20 @@ public class AnimalExploration : MonoBehaviour, IInteractable
         AddAnimalToPlayerList();
     }
 
+    bool interacted = false;
     void AddAnimalToPlayerList()
     {
         heartParticles.Play();
-        brokenHeart.SetActive(false);   
-        PlayerPrefs.SetString("AnimalToPlayerList", dataName);
-        PlayerInventory.Instance.AddResource("Gold", GameObject.Find("DontDestroyOnLoad").GetComponent<DataCarrier>().missionReward);
+        if (!interacted)
+        {
+            interacted = true;
+            brokenHeart.SetActive(false);
+            PlayerPrefs.SetString("AnimalToPlayerList", dataName);
 
-        Invoke("LoadScene", 2f);
+            PlayerInventory.Instance.AddResource("Gold", GameObject.Find("DontDestroyOnLoad").GetComponent<DataCarrier>().missionReward);
+
+            Invoke("LoadScene", 2f);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -63,6 +63,14 @@ public class PlayerInventory : MonoBehaviour
         SaveResources();
     }
 
+    public bool IfEnoughResources(string resourceName, int cost)
+    {
+        if (resources[resourceName] >= cost)
+        {
+            return true;
+        }
+        return false;
+    }
     private void UpdateResourceText(string resourceName)
     {
         foreach (TextMeshProUGUI txt in resourceDisplay)
@@ -83,14 +91,6 @@ public class PlayerInventory : MonoBehaviour
         }
     }
 
-    public bool IfEnoughResources(string resourceName, int cost)
-    {
-        if (resources[resourceName] >= cost)
-        {
-            return true;
-        }
-        return false;
-    }
 
     private void SaveResources()
     {

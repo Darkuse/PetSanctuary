@@ -10,7 +10,6 @@ public class GridBuilding : MonoBehaviour
 {
     [Header("Tilemaps")]
     public Tilemap builderGrid;
-    public Tilemap restartBuilderGrid;
     public Tilemap cageGrid;
 
     [Header("UI Elements")]
@@ -82,7 +81,7 @@ public class GridBuilding : MonoBehaviour
     }
 
     [Header("Warning")]
-    public GameObject warningPanel;
+    public WarningPanel warningPanel;
     private ResourceCost resourceCost;
     public void ToBuildMenu(ResourceCost cost)
     {
@@ -98,12 +97,12 @@ public class GridBuilding : MonoBehaviour
             if (canAfford)
                 StartBuilding();
             else
-                warningPanel.SetActive(true);
+                warningPanel.NotEnoughResource();
             resourceCost = cost;
         }
         catch
         {
-            warningPanel.SetActive(true);
+            warningPanel.NotEnoughResource();
         }
     }
 

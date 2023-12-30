@@ -169,7 +169,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Orange fox_upscayl_4x_realesrgan-x4plus-anime_0: -5869528054578649119
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

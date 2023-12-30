@@ -169,7 +169,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      RedTiles_0: 5581778018956167662
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

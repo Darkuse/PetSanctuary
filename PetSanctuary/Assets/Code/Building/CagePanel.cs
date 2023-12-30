@@ -134,9 +134,9 @@ public class CagePanel : MonoBehaviour
     public void AddAnimalToCage(AnimalInfo animal)
     {
         cageInfo.animalInfo = animal;
-        UpdateInfoPanel(cageInfo);
         cageInfo.UpdateBuilingInfo();
         cageInfo.SpawnAnimalInCage();
+        UpdateInfoPanel(cageInfo);
         animalList.RemoveAnimalFromPlayerList(animal.dataName);
     }
 
@@ -151,7 +151,7 @@ public class CagePanel : MonoBehaviour
         animalRewardForRealeasingText.text = String.Format("Release Reward: {0} Gold Coins", CountAnimalWorth());
     }
 
-     public void SellAnimal()
+    public void SellAnimal()
     {
         PlayerInventory.Instance.AddResource("Gold", CountAnimalWorth());
         cageInfo.animalInfo = new AnimalInfo();
