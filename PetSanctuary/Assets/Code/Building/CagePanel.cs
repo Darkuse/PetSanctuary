@@ -226,5 +226,8 @@ public class CagePanel : MonoBehaviour
         buttonFedText.text = "Feed";
     }
 
-
+    public void DeleteCage()
+    {
+        cageInfo.DeleteCage();
+    }
 }

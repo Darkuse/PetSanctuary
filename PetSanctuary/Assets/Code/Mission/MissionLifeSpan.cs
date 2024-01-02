@@ -14,6 +14,12 @@ public class MissionLifeSpan : MonoBehaviour
     private int missionReward;
     private GameObject missionAnimal;
 
+    public TextMeshProUGUI missionNameText;
+    public TextMeshProUGUI missionTimeLeftText;
+    public TextMeshProUGUI missionDifficultyText;
+    public Image animalAvatar;
+
+
     public void SetMissionInfo(string name, string type, float difficulty, string description, GameObject animal)
     {
         missionName = name;
@@ -26,12 +32,12 @@ public class MissionLifeSpan : MonoBehaviour
     private void Start()
     {
         GetComponent<Button>().onClick.AddListener(PickedMission);
-
+        animalAvatar.sprite = Resources.Load<Sprite>("Animals/" + missionAnimal.GetComponent<Animal>().animalInfo.dataName + "Head");
         // Mission Name
-        transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format(missionName, missionAnimal.GetComponent<Animal>().animalInfo.name);
+        missionNameText.text = string.Format(missionName, missionAnimal.GetComponent<Animal>().animalInfo.name);
         // Mission LifeSpan
         missionLifeSpan = (int)(Random.Range(1, 6) / missionDifficulty);
-        transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format("Time Left: {0}m", missionLifeSpan);
+        missionTimeLeftText.text = string.Format("Time Left: {0}m", missionLifeSpan);
         // Mission Difficulty
 
         string difficultyCategory;
@@ -49,7 +55,7 @@ public class MissionLifeSpan : MonoBehaviour
             difficultyCategory = "Hard";
         }
 
-        transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = string.Format("Difficulty: {0}", difficultyCategory);
+        missionDifficultyText.text = string.Format("Difficulty: {0}", difficultyCategory);
 
         StartCoroutine(TimerCoroutine());
     }
@@ -60,7 +66,7 @@ public class MissionLifeSpan : MonoBehaviour
         {
             yield return new WaitForSeconds(60);
             missionLifeSpan--;
-            transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = string.Format("Time Left: {0}m", missionLifeSpan);
+            missionTimeLeftText.text = string.Format("Time Left: {0}m", missionLifeSpan);
         }
         Debug.Log("Timer finished!");
         Destroy(gameObject);

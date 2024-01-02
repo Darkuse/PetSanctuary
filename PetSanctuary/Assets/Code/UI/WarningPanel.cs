@@ -10,7 +10,6 @@ public class WarningPanel : MonoBehaviour
     public TextMeshProUGUI releaseText;
     // Not enough resources
     public TextMeshProUGUI notenoughText;
-    public TextMeshProUGUI notEnoughFoodText;
 
     public CagePanel cagePanel;
 
@@ -30,18 +29,17 @@ public class WarningPanel : MonoBehaviour
         warningPanel.SetActive(false);
     }
 
-
     // Opens warning panel for not enough resource notice
     public void NotEnoughResource()
     {
         FalseEverthing();
         notenoughText.gameObject.SetActive(true);
+        notenoughText.text = "Not Enough Resources";
     }
 
     private void FalseEverthing()
     {
         warningPanel.SetActive(true);
-        notEnoughFoodText.gameObject.SetActive(false);
         notenoughText.gameObject.SetActive(false);
         releaseText.gameObject.SetActive(false);
         aceptButton.gameObject.SetActive(false);
@@ -50,7 +48,15 @@ public class WarningPanel : MonoBehaviour
     public void NotEnoughFood()
     {
         FalseEverthing();
-        notEnoughFoodText.gameObject.SetActive(true);
+        notenoughText.gameObject.SetActive(true);
+        notenoughText.text = "Not Enough Food";
+    }
+
+    public void NotEnoughGold()
+    {
+        FalseEverthing();
+        notenoughText.gameObject.SetActive(true);
+        notenoughText.text = "Not Enough Gold";
     }
 
 }

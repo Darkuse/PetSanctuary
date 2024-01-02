@@ -5,9 +5,16 @@ using UnityEngine;
 
 public class ResourceCost : MonoBehaviour
 {
+    public enum BuildType
+    {
+        Cage,
+        Farm
+    }
+
     public int woodCost;
     public int stoneCost;
     public int goldCost;
+    public BuildType buildType;
 
     public int cageWidth;
     public int cageHeight;

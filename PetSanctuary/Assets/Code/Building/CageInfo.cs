@@ -9,7 +9,7 @@ public class CageInfo : MonoBehaviour, IInteractable
     public string lastTimeFed;
 
     public AnimalInfo animalInfo;
-    private SerializableBuildInfo buildInfo;
+    private SerializableCageInfo buildInfo;
     private CagePanel cp;
     private GridBuilding gridBuild;
     public int foodCount;
@@ -56,7 +56,7 @@ public class CageInfo : MonoBehaviour, IInteractable
         cp.UpdateInfoPanel(this);
     }
 
-    public void SetCagePanel(GameObject panel, SerializableBuildInfo buildInfo, GridBuilding gridbuild)
+    public void SetCagePanel(GameObject panel, SerializableCageInfo buildInfo, GridBuilding gridbuild)
     {
         cagePanel = panel;
         this.buildInfo = buildInfo;
@@ -88,7 +88,6 @@ public class CageInfo : MonoBehaviour, IInteractable
         }
         catch { }
     }
-
 
     public void AnimalWasPetted()
     {
@@ -149,7 +148,7 @@ public class CageInfo : MonoBehaviour, IInteractable
         buildInfo.health = animalInfo.health;
         buildInfo.lastTimeFed = lastTimeFed;
         buildInfo.lastTimePetted = lastTimePetted;
-        gridBuild.UpdateBuildingInfo(buildInfo);
+        gridBuild.UpdateCageInfo(buildInfo);
     }
 
     public void SpawnAnimalInCage()
@@ -158,6 +157,13 @@ public class CageInfo : MonoBehaviour, IInteractable
         // Spawns animal to cage
         spawnedAnimal = Instantiate(GameObject.Find("Animals").GetComponent<AnimalList>().PickAnimalToSpawn(animalInfo.dataName), new Vector2(), Quaternion.identity);
         spawnedAnimal.transform.SetParent(transform, false);
+    }
+
+    public void DeleteCage()
+    {
+        gridBuild.DeleteCage(buildInfo.GetVector3Int(), buildInfo.buildingWidth, buildInfo.buildingHeight);
+        cagePanel.SetActive(false);
+        Destroy(gameObject);
     }
 
 }

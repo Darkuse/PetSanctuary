@@ -30,7 +30,7 @@ public class PlayerInventory : MonoBehaviour
 
     public void AddResource(string resourceName, int resourceCount)
     {
-        Debug.Log(string.Format("{0} have been added with {1}", resourceName, resourceCount));
+        //Debug.Log(string.Format("{0} have been added with {1}", resourceName, resourceCount));
         if (resources.ContainsKey(resourceName))
         {
             resources[resourceName] += resourceCount;

@@ -20,6 +20,7 @@ public class ResourceInfo : MonoBehaviour, IInteractable
     public string description;
     public int resourceCount;
     public GatheringTool gatheringTools;
+    public int gatherTime;
 
     private PlayerController player;
     public TextMeshProUGUI interactionText;
@@ -29,8 +30,8 @@ public class ResourceInfo : MonoBehaviour, IInteractable
 
     public void InteractLogic()
     {
-        Instantiate(smokeParticle, transform.position, Quaternion.identity);
-        gatherResource();
+        
+        StartCoroutine(GatherTimer(gatherTime, player));
     }
 
     void gatherResource()
@@ -57,5 +58,18 @@ public class ResourceInfo : MonoBehaviour, IInteractable
             player.clearIInstance();
             GameObject.Find("ButtonAction").GetComponent<InteractionButton>().ChangeImage(null);
         }
+    }
+
+    private IEnumerator GatherTimer(int totalSec, PlayerController playersBar)
+    {
+            playersBar.SetBar(true);
+        for (int sec = totalSec; sec >= 0; sec--)
+        {
+            playersBar.GatherBar(sec, totalSec);
+            yield return new WaitForSeconds(1);
+        }
+        Instantiate(smokeParticle, transform.position, Quaternion.identity);
+        gatherResource();
+        playersBar.SetBar(false);
     }
 }

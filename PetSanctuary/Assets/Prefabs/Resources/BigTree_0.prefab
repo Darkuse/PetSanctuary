@@ -307,8 +307,9 @@ MonoBehaviour:
   resourceName: Big tree
   resourceDataName: Wood
   description: 
-  resourceCount: 10
+  resourceCount: 5
   gatheringTools: 2
+  gatherTime: 5
   interactionText: {fileID: 0}
   smokeParticle: {fileID: 3665097004193067268, guid: 89832ca5bfb45454589c92165c25f76e, type: 3}
 --- !u!212 &2221150606655365162

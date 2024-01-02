@@ -108,6 +108,7 @@ MonoBehaviour:
   description: 
   resourceCount: 3
   gatheringTools: 1
+  gatherTime: 3
   interactionText: {fileID: 0}
   smokeParticle: {fileID: 3665097004193067268, guid: 89832ca5bfb45454589c92165c25f76e, type: 3}
 --- !u!61 &8752494775474634933

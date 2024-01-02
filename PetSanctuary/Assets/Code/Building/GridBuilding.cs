@@ -46,21 +46,12 @@ public class GridBuilding : MonoBehaviour
 
     [Header("Buildings")]
     public Transform buildingSpace;
-    private List<SerializableBuildInfo> buildingInfo = new List<SerializableBuildInfo>();
+    private List<SerializableCageInfo> cageInfoList = new List<SerializableCageInfo>();
+    private List<SerializableFarmInfo> farmInfoList = new List<SerializableFarmInfo>();
 
     private void Start()
     {
-        buildingInfo = LoadBuildingList();
-        foreach (var item in buildingInfo)
-        {
-            width = item.buildingWidth;
-            height = item.buildingHeight;
-            ChangeStartEndIterationSize(0);
-            HighLight(item.GetVector3Int(), redTile);
-            BuildFence(item.GetVector3Int());
-            SpawnObjectAtCenter(item.GetVector3Int(), item);
-        }
-
+        LoadBuildingList();
     }
 
     private void ChangeStartEndIterationSize(int extraSize)
@@ -83,6 +74,7 @@ public class GridBuilding : MonoBehaviour
     [Header("Warning")]
     public WarningPanel warningPanel;
     private ResourceCost resourceCost;
+    private string buildType;
     public void ToBuildMenu(ResourceCost cost)
     {
         try
@@ -99,6 +91,7 @@ public class GridBuilding : MonoBehaviour
             else
                 warningPanel.NotEnoughResource();
             resourceCost = cost;
+            buildType = cost.buildType.ToString();
         }
         catch
         {
@@ -186,13 +179,22 @@ public class GridBuilding : MonoBehaviour
         // Fore iteration
         ChangeStartEndIterationSize(0);
 
-        // Builds Fence Tiles
-        BuildFence(previuosCenter);
+        if (buildType == "Cage")
+        {
+            // Builds Fence Tiles
+            BuildFence(previuosCenter, fenceTile);
 
 
-        // Adds Fence position and infomration in list
-        SerializableBuildInfo buildInf = new SerializableBuildInfo(previuosCenter, width, height);
-        buildingInfo.Add(buildInf);
+            // Adds Fence position and infomration in list
+            SerializableCageInfo buildInf = new SerializableCageInfo(previuosCenter, width, height);
+            cageInfoList.Add(buildInf);
+            // Spawns Fence object with information about him
+            SpawnObjectAtCenter(previuosCenter, buildInf);
+        }
+        else if(buildType == "Farm")
+        {
+            farmInfoList.Add(new SerializableFarmInfo(previuosCenter));
+        }
 
         // Save Build Fence in Playerprefs
         SaveBuildingList();
@@ -200,8 +202,6 @@ public class GridBuilding : MonoBehaviour
         // Paints tile to red
         HighLight(previuosCenter, redTile);
 
-        // Spawns Fence object with information about him
-        SpawnObjectAtCenter(previuosCenter, buildInf);
 
         // Removes resources
         PlayerInventory.Instance.RemoveResource("Wood", resourceCost.woodCost);
@@ -217,7 +217,7 @@ public class GridBuilding : MonoBehaviour
         StartBuilding();
     }
 
-    private void BuildFence(Vector3Int position)
+    private void BuildFence(Vector3Int position, RuleTile tile)
     {
         Debug.LogWarning("Entered Fence Building");
         for (int x = startX; x <= endX; x++)
@@ -225,15 +225,15 @@ public class GridBuilding : MonoBehaviour
             for (int y = startY; y <= endY; y++)
             {
                 Vector3Int tilePosition = new Vector3Int(position.x + x, position.y + y, position.z);
-                cageGrid.SetTile(tilePosition, fenceTile);
+                cageGrid.SetTile(tilePosition, tile);
             }
         }
     }
 
-
-    // psawns object, adds class CageInfo to object to store information about cage
+    // Spawns object, adds class CageInfo to object to store information about cage
     public GameObject cagePanel;
-    public void SpawnObjectAtCenter(Vector3 centerPosition, SerializableBuildInfo buildInf)
+    public GameObject farmPanel;
+    public void SpawnObjectAtCenter(Vector3 centerPosition, SerializableCageInfo buildInf)
     {
         // Creates new gameObject
         GameObject spawnedObject = new GameObject("CageInfo");
@@ -245,27 +245,50 @@ public class GridBuilding : MonoBehaviour
         if (buildInf.buildingHeight % 2 != 0) centerPosition += new Vector3(0, 0.5f, 0);
         spawnedObject.transform.position = centerPosition;
 
-        // Adds to object Collider and sets width and height, interact with player
+        // Adds to object Collider and sets width and height, interact with player Trigger
         BoxCollider2D boxCollider = spawnedObject.AddComponent<BoxCollider2D>();
-        boxCollider.size = new Vector3(buildInf.buildingWidth+0.3f, buildInf.buildingHeight+0.3f, 1);
+        boxCollider.size = new Vector3(buildInf.buildingWidth + 0.3f, buildInf.buildingHeight + 0.3f, 1);
         boxCollider.isTrigger = true;
-        // Object in which is storing non-Triggering collider
-        GameObject border = new GameObject("Border");
-        border.transform.SetParent(spawnedObject.transform, false);
+
         // Obstacle for player
         BoxCollider2D boxColliderBorder = spawnedObject.AddComponent<BoxCollider2D>();
-        boxColliderBorder.size = new Vector3(buildInf.buildingWidth, buildInf.buildingHeight, 1);
+        boxColliderBorder.size = new Vector3(buildInf.buildingWidth-0.6f, buildInf.buildingHeight - 0.5f, 1);
         // Sends info to new Object
         spawnedObject.AddComponent<CageInfo>().SetCagePanel(cagePanel, buildInf, this);
     }
 
+    public void SpawnFarmObject(Vector3 centerPosition, SerializableFarmInfo buildInf)
+    {
+        GameObject spawnedObject = new GameObject("FarmInfo");
+
+        spawnedObject.transform.SetParent(buildingSpace, false);
+
+        centerPosition += new Vector3(0.5f, 0.5f, 0);
+        spawnedObject.transform.position = centerPosition;
+
+        // Adds to object Collider and sets width and height, interact with player
+        BoxCollider2D boxCollider = spawnedObject.AddComponent<BoxCollider2D>();
+        boxCollider.size = new Vector3(1 + 0.3f, 1 + 0.3f, 1);
+        boxCollider.isTrigger = true;
+
+        // Obstacle for player
+        BoxCollider2D boxColliderBorder = spawnedObject.AddComponent<BoxCollider2D>();
+        boxColliderBorder.size = new Vector3(1,1, 1);
+        // Sends info to new Object
+        spawnedObject.AddComponent<FarmInfo>().SetFarmPanel(farmPanel, buildInf, this);
+    }
+
     private void SaveBuildingList()
     {
-        SerializableVector3IntList serializableList = new SerializableVector3IntList();
+        SerializableBuildingsInformation serializableList = new SerializableBuildingsInformation();
 
-        foreach (var build in buildingInfo)
+        foreach (var build in cageInfoList)
         {
-            serializableList.list.Add(build);
+            serializableList.cageList.Add(build);
+        }
+        foreach (var build in farmInfoList)
+        {
+            serializableList.farmList.Add(build);
         }
 
         string json = JsonUtility.ToJson(serializableList);
@@ -276,62 +299,98 @@ public class GridBuilding : MonoBehaviour
 #endif
     }
 
-    public List<SerializableBuildInfo> LoadBuildingList()
+    public void LoadBuildingList()
     {
-        string json = PlayerPrefs.GetString("BuildList",null);
+        string json = PlayerPrefs.GetString("BuildList", null);
         if (json != null)
         {
-            SerializableVector3IntList serializableList = JsonUtility.FromJson<SerializableVector3IntList>(json);
+            SerializableBuildingsInformation serializableList = JsonUtility.FromJson<SerializableBuildingsInformation>(json);
 
-            List<SerializableBuildInfo> buildingInfo = new List<SerializableBuildInfo>();
-
-            foreach (var serializableVector in serializableList.list)
+            foreach (var cageBuild in serializableList.cageList)
             {
-                //Vector3Int vector = new Vector3Int(serializableVector.x, serializableVector.y, serializableVector.z);
-                //SerializableBuildInfo buildInfo = new SerializableBuildInfo(vector, serializableVector.buildingWidth, serializableVector.buildingHeight);
-                buildingInfo.Add(serializableVector);
+                width = cageBuild.buildingWidth;
+                height = cageBuild.buildingHeight;
+                ChangeStartEndIterationSize(0);
+                HighLight(cageBuild.GetVector3Int(), redTile);
+                BuildFence(cageBuild.GetVector3Int(), fenceTile);
+                SpawnObjectAtCenter(cageBuild.GetVector3Int(), cageBuild);
+                cageInfoList.Add(cageBuild);
             }
-
-            return buildingInfo;
-        }
-        // If json is empty, it will give blank list
-        return new List<SerializableBuildInfo>();
-    }
-
-    public void NewTileMap()
-    {
-        BoundsInt bounds = builderGrid.cellBounds;
-        for (int x = bounds.xMin; x < bounds.xMax; x++)
-        {
-            for (int y = bounds.yMin; y < bounds.yMax; y++)
+            foreach (var farmBuild in serializableList.farmList)
             {
-                TileBase tile = builderGrid.GetTile(new Vector3Int(x, y, 0));
-                if (tile == redTile)
-                {
-                    builderGrid.SetTile(new Vector3Int(x, y), greenTile);
-                }
+                width = 1;
+                height = 1;
+                ChangeStartEndIterationSize(0);
+                SpawnFarmObject(farmBuild.GetVector3Int(), farmBuild);
+                HighLight(farmBuild.GetVector3Int(), redTile);
+                farmInfoList.Add(farmBuild);
             }
         }
-        PlayerPrefs.SetString("BuildList", "");
-        PlayerPrefs.Save();
     }
 
-    public void UpdateBuildingInfo(SerializableBuildInfo cageInfo)
+    // Updates Cage builds information
+    public void UpdateCageInfo(SerializableCageInfo cageInfoBuild)
     {
-        for (int i = 0; i < buildingInfo.Count; i++)
+        for (int i = 0; i < cageInfoList.Count; i++)
         {
-            if (buildingInfo[i].GetVector3Int() == cageInfo.GetVector3Int())
+            if (cageInfoList[i].GetVector3Int() == cageInfoBuild.GetVector3Int())
             {
-                buildingInfo[i] = cageInfo;
+                cageInfoList[i] = cageInfoBuild;
                 break;
             }
         }
         SaveBuildingList();
     }
+    // Updates Farm builds information
+    public void UpdateFarmInfo(SerializableFarmInfo farmInfoBuild)
+    {
+        for (int i = 0; i < farmInfoList.Count; i++)
+        {
+            if (farmInfoList[i].GetVector3Int() == farmInfoBuild.GetVector3Int())
+            {
+                farmInfoList[i] = farmInfoBuild;
+                break;
+            }
+        }
+        SaveBuildingList();
+    }
+
+    public void DeleteCage(Vector3Int currentbuildingPos,int width,int height)
+    {
+        this.width = width;
+        this.height = height;
+        ChangeStartEndIterationSize(0);
+        for (int i = cageInfoList.Count - 1; i >= 0; i--)
+        {
+            if (cageInfoList[i].GetVector3Int() == currentbuildingPos)
+            {
+                cageInfoList.RemoveAt(i);
+                break;
+            }
+        }
+        BuildFence(currentbuildingPos, null);
+        SaveBuildingList();
+    }
+    public void DeleteFarm(Vector3Int currentbuildingPos)
+    {
+        width = 1;
+        height = 1;
+        ChangeStartEndIterationSize(0);
+        for (int i = farmInfoList.Count - 1; i >= 0; i--)
+        {
+            if (farmInfoList[i].GetVector3Int() == currentbuildingPos)
+            {
+                farmInfoList.RemoveAt(i);
+                break;
+            }
+        }
+        BuildFence(currentbuildingPos, null);
+        SaveBuildingList();
+    }
 }
 
 [Serializable]
-public class SerializableBuildInfo
+public class SerializableCageInfo
 {
     public int x, y, z, buildingWidth, buildingHeight;
     public int friendship;
@@ -343,7 +402,7 @@ public class SerializableBuildInfo
     public string name;
 
 
-    public SerializableBuildInfo(Vector3Int vector, int width, int height)
+    public SerializableCageInfo(Vector3Int vector, int width, int height)
     {
         x = vector.x;
         y = vector.y;
@@ -359,8 +418,29 @@ public class SerializableBuildInfo
 }
 
 [Serializable]
-public class SerializableVector3IntList
+public class SerializableFarmInfo
 {
-    public List<SerializableBuildInfo> list = new List<SerializableBuildInfo>();
+    public int x, y, z, foodHarvest, growTime;
+    public string growStartTime;
+    public bool growing;
+
+    public SerializableFarmInfo(Vector3Int vector)
+    {
+        x = vector.x;
+        y = vector.y;
+        z = vector.z;
+    }
+
+    public Vector3Int GetVector3Int()
+    {
+        return new Vector3Int(x, y, z);
+    }
+}
+
+[Serializable]
+public class SerializableBuildingsInformation
+{
+    public List<SerializableCageInfo> cageList = new List<SerializableCageInfo>();
+    public List<SerializableFarmInfo> farmList = new List<SerializableFarmInfo>();
 }
 

@@ -28,7 +28,7 @@ public class AnimalList : MonoBehaviour
     public void LoadAnimalList()
     {
         string json = PlayerPrefs.GetString("AnimalPlayerList");
-        Debug.Log("Loading Animal list");
+        //Debug.Log("Loading Animal list");
         Debug.Log(json);
         if (!string.IsNullOrEmpty(json))
         {
@@ -57,7 +57,7 @@ public class AnimalList : MonoBehaviour
         }
         json = JsonUtility.ToJson(listWrapper);
         PlayerPrefs.SetString("AnimalPlayerList", json);
-        Debug.Log("Saving Animal list");
+       // Debug.Log("Saving Animal list");
         Debug.Log(json);
         PlayerPrefs.Save();
     }

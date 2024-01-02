@@ -106,8 +106,9 @@ MonoBehaviour:
   resourceName: Small pile of stones
   resourceDataName: Stone
   description: 
-  resourceCount: 2
+  resourceCount: 1
   gatheringTools: 0
+  gatherTime: 1
   interactionText: {fileID: 0}
   smokeParticle: {fileID: 3665097004193067268, guid: 89832ca5bfb45454589c92165c25f76e, type: 3}
 --- !u!61 &2438346445050838308
