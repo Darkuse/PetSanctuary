@@ -1,6 +1,8 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class AnimalExploration : MonoBehaviour, IInteractable
 {
@@ -8,17 +10,45 @@ public class AnimalExploration : MonoBehaviour, IInteractable
     public ParticleSystem heartParticles;
     public string dataName;
     public GameObject brokenHeart;
+    public Image fillBar;
+    public TextMeshProUGUI timer;
+    private int timesPet = 0;
+    WarningPanel warningPanel;
+
+    private bool isPetCoroutineRunning = false;
+
+    private void Start()
+    {
+        fillBar.transform.parent.gameObject.SetActive(false);
+        warningPanel = GameObject.Find("Scripts").GetComponent<WarningPanel>();
+    }
 
     public void InteractLogic()
     {
-        //Instantiate(heartParticles, transform.position, Quaternion.identity);
-        AddAnimalToPlayerList();
+        if (!isPetCoroutineRunning)
+        {
+            if (PlayerInventory.Instance.IfEnoughResources("Food", 1))
+            {
+                fillBar.transform.parent.gameObject.SetActive(true);
+                heartParticles.Play();
+                StartCoroutine(TimerCoroutine(5));
+                PlayerInventory.Instance.RemoveResource("Food", 1);
+            }
+            else
+            {
+                warningPanel.NotEnoughFoodExploration();
+            }
+        }
+        if (timesPet >= 5)
+        {
+            fillBar.transform.parent.gameObject.SetActive(false);
+            AddAnimalToPlayerList();
+        }
     }
 
     bool interacted = false;
     void AddAnimalToPlayerList()
     {
-        heartParticles.Play();
         if (!interacted)
         {
             interacted = true;
@@ -26,7 +56,6 @@ public class AnimalExploration : MonoBehaviour, IInteractable
             PlayerPrefs.SetString("AnimalToPlayerList", dataName);
 
             PlayerInventory.Instance.AddResource("Gold", GameObject.Find("DontDestroyOnLoad").GetComponent<DataCarrier>().missionReward);
-
             Invoke("LoadScene", 2f);
         }
     }
@@ -62,5 +91,21 @@ public class AnimalExploration : MonoBehaviour, IInteractable
         {
             yield return null;
         }
+    }
+
+    private IEnumerator TimerCoroutine(int durationInSeconds)
+    {
+        isPetCoroutineRunning = true;
+        int secondsRemaining = durationInSeconds;
+        timesPet++;
+        fillBar.fillAmount = (float)timesPet / 5;
+
+        while (secondsRemaining > 0)
+        {
+            yield return new WaitForSeconds(1);
+            secondsRemaining--;
+            timer.text = string.Format("{0:00}:{1:00}", secondsRemaining / 60, secondsRemaining);
+        }
+        isPetCoroutineRunning = false;
     }
 }

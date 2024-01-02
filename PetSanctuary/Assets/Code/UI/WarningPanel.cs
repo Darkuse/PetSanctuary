@@ -58,5 +58,10 @@ public class WarningPanel : MonoBehaviour
         notenoughText.gameObject.SetActive(true);
         notenoughText.text = "Not Enough Gold";
     }
-
+    public void NotEnoughFoodExploration()
+    {
+        warningPanel.SetActive(true);
+        notenoughText.gameObject.SetActive(true);
+        notenoughText.text = "Not Enough Food";
+    }
 }
