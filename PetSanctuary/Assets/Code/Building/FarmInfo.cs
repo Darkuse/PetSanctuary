@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class FarmInfo : MonoBehaviour, IInteractable
 {
@@ -65,6 +66,7 @@ public class FarmInfo : MonoBehaviour, IInteractable
         gridBuild.DeleteFarm(buildInfo.GetVector3Int());
         farmUIPanel.SetActive(false);
         Destroy(gameObject);
+        SceneManager.LoadScene("Base");
     }
 
     public void PlantWasPlanted(int yield, int growTime)

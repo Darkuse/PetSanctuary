@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CageInfo : MonoBehaviour, IInteractable
 {
@@ -164,6 +165,7 @@ public class CageInfo : MonoBehaviour, IInteractable
         gridBuild.DeleteCage(buildInfo.GetVector3Int(), buildInfo.buildingWidth, buildInfo.buildingHeight);
         cagePanel.SetActive(false);
         Destroy(gameObject);
+        SceneManager.LoadScene("Base");
     }
 
 }
