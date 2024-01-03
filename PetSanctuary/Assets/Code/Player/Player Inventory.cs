@@ -30,6 +30,16 @@ public class PlayerInventory : MonoBehaviour
 
     public void AddResource(string resourceName, int resourceCount)
     {
+        if (resourceName == "Gold")
+        {
+            int temp = PlayerPrefs.GetInt("goldCoinsEarned", 0);
+            if (temp < 200)
+            {
+                temp += resourceCount;
+                PlayerPrefs.SetInt("goldCoinsEarned", temp);
+                GameObject.Find("Achievements").GetComponent<Achievement>().CheckGold();
+            }
+        }
         //Debug.Log(string.Format("{0} have been added with {1}", resourceName, resourceCount));
         if (resources.ContainsKey(resourceName))
         {

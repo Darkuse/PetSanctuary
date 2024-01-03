@@ -17,50 +17,78 @@ public class PopulateWorld : MonoBehaviour
 
     public GameObject treeSpawn;
     public GameObject stoneSpawn;
-    [Range(10, 100)]
+    [Range(10, 500)]
     public int treeCount;
-    [Range(10, 100)]
+    [Range(10, 500)]
     public int stoneCount;
 
 
+    private HashSet<Vector2Int> occupiedPositions = new HashSet<Vector2Int>();
+
     void Start()
     {
-        AddResources();
+        InitializeSeed();
+        PopulateTrees();
+        PopulateStones();
+        SpawnMissionAnimal();
     }
 
-    void AddResources()
+    void InitializeSeed()
     {
         if (PlayerPrefs.GetString("RandomSeed") == "true")
         {
             seed = (int)System.DateTime.Now.Ticks;
         }
         Random.InitState(seed);
+    }
 
-        // Populate Trees
-        for (int i = 0; i < treeCount; i++)
+    void PopulateTrees()
+    {
+        PopulateResource(treeCount, trees, treeSpawn.transform);
+    }
+
+    void PopulateStones()
+    {
+        PopulateResource(stoneCount, stones, stoneSpawn.transform);
+    }
+
+    void PopulateResource(int count, List<GameObject> resourceList, Transform parent)
+    {
+        for (int i = 0; i < count; i++)
         {
-            Vector2 position = new Vector2Int(Random.Range(-worldWidth + 1, worldWidth - 1), Random.Range(-worldHeight + 1, worldHeight - 1));
-            Instantiate(trees[Random.Range(0, trees.Count)], position, Quaternion.identity).transform.SetParent(treeSpawn.transform);
+            Vector2Int position2D;
+            do
+            {
+                position2D = new Vector2Int(Random.Range(-worldWidth + 1, worldWidth - 1), Random.Range(-worldHeight + 1, worldHeight - 1));
+            } while (occupiedPositions.Contains(position2D));
 
+            occupiedPositions.Add(position2D);
+            Vector3 position = new Vector3(position2D.x, position2D.y, 0); // Convert to Vector3
+            GameObject resource = Instantiate(resourceList[Random.Range(0, resourceList.Count)], position, Quaternion.identity);
+            resource.transform.SetParent(parent);
         }
+    }
 
-        // Populate Stones
-        for (int i = 0; i < stoneCount; i++)
-        {
-            Vector2 position = new Vector2Int(Random.Range(-worldWidth + 1, worldWidth - 1), Random.Range(-worldHeight + 1, worldHeight - 1));
-            Instantiate(stones[Random.Range(0, stones.Count)], position, Quaternion.identity).transform.SetParent(stoneSpawn.transform);
-        }
 
-        // Spawns Animal to the world
+    void SpawnMissionAnimal()
+    {
         data = GameObject.Find("DontDestroyOnLoad").GetComponent<DataCarrier>();
-        Vector2 positiona = new Vector2Int(Random.Range(-worldWidth, worldWidth), Random.Range(-worldHeight, worldHeight));
+        Vector2Int position2D;
+        do
+        {
+            position2D = new Vector2Int(Random.Range(-worldWidth, worldWidth), Random.Range(-worldHeight, worldHeight));
+        } while (occupiedPositions.Contains(position2D));
+
+        Vector3 position = new Vector3(position2D.x, position2D.y, 0); // Convert to Vector3
+
         foreach (var item in animalListSpawn)
         {
             if (item.GetComponent<AnimalExploration>().dataName == data.missionAnimalDataName)
             {
-                Instantiate(item, positiona, Quaternion.identity);
+                Instantiate(item, position, Quaternion.identity);
                 break;
             }
         }
+
     }
 }

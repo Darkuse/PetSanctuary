@@ -39,7 +39,7 @@ public class AnimalExploration : MonoBehaviour, IInteractable
                 warningPanel.NotEnoughFoodExploration();
             }
         }
-        if (timesPet >= 5)
+        if (timesPet >= 2)
         {
             fillBar.transform.parent.gameObject.SetActive(false);
             AddAnimalToPlayerList();
@@ -56,6 +56,12 @@ public class AnimalExploration : MonoBehaviour, IInteractable
             PlayerPrefs.SetString("AnimalToPlayerList", dataName);
 
             PlayerInventory.Instance.AddResource("Gold", GameObject.Find("DontDestroyOnLoad").GetComponent<DataCarrier>().missionReward);
+
+            int temp = PlayerPrefs.GetInt("numberOfAnimalsTamed", 0);
+            temp++;
+            PlayerPrefs.SetInt("numberOfAnimalsTamed", temp);
+
+            GameObject.Find("Achievements").GetComponent<Achievement>().CheckTame();
             Invoke("LoadScene", 2f);
         }
     }
@@ -98,7 +104,7 @@ public class AnimalExploration : MonoBehaviour, IInteractable
         isPetCoroutineRunning = true;
         int secondsRemaining = durationInSeconds;
         timesPet++;
-        fillBar.fillAmount = (float)timesPet / 5;
+        fillBar.fillAmount = (float)timesPet / 2;
 
         while (secondsRemaining > 0)
         {

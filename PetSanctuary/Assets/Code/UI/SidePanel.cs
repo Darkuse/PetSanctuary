@@ -19,10 +19,10 @@ public class SidePanel : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.GetString("PlayerName", null) == null|| PlayerPrefs.GetString("PlayerName", null)=="")
-        {
-            playerNamePanel.SetActive(true);
-        }
+        //if (PlayerPrefs.GetString("PlayerName", null) == null|| PlayerPrefs.GetString("PlayerName", null)=="")
+        //{
+        //    playerNamePanel.SetActive(true);
+        //}
         PlayerInventory.Instance.resourceDisplay = resourceDisplay;
         PlayerInventory.Instance.AddResource("Wood", 0);
         PlayerInventory.Instance.AddResource("Stone", 0);

@@ -102,6 +102,11 @@ public class CageInfo : MonoBehaviour, IInteractable
             animalInfo.friendship = Mathf.Clamp(animalInfo.friendship + 5, 0, 100);
             animalInfo.health = Mathf.Clamp(animalInfo.health + 3, 0, 100);
             UpdateBuilingInfo();
+
+            int currentPettedCount = PlayerPrefs.GetInt("timesAnimalsPetted", 0);
+            currentPettedCount++;
+            PlayerPrefs.SetInt("timesAnimalsPetted", currentPettedCount);
+            GameObject.Find("Achievements").GetComponent<Achievement>().CheckPet();
         }
     }
 

@@ -79,7 +79,7 @@ public class FarmPanel : MonoBehaviour
 
             if (timeUntilHarvest.TotalSeconds > 0)
             {
-                foodTimeText.text = "Time Until Harvest: " + timeUntilHarvest.ToString(@"dd\:hh\:mm\:ss");
+                foodTimeText.text = "Time Until Harvest: " + timeUntilHarvest.ToString(@"hh\:mm\:ss");
             }
             else
             {
@@ -94,6 +94,11 @@ public class FarmPanel : MonoBehaviour
     public void CollectFood()
     {
         farmInfo.PlantCollected();
+        int temp = PlayerPrefs.GetInt("timesCollectedFromFarm", 0);
+        temp++;
+        PlayerPrefs.SetInt("timesCollectedFromFarm", temp);
+
+        GameObject.Find("Achievements").GetComponent<Achievement>().CheckFarm();
         NothingIsGrowing(farmInfo.GetBuildPosition());
     }
     public void DeleteFarm()
